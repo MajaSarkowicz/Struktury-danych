@@ -32,10 +32,9 @@ template <typename T> vector<T> create_reiteration_copies(T structure, int reite
     return reiter_copies;
 }
 
-template <typename T> void run_add_front_tests(vector<T> cases, int reiterations){
+template <typename T> vector<double> run_add_front_tests(vector<T> cases, int reiterations){
     vector<double> times;
-    double avg_time;
-    double run_time;
+    double avg_time, run_time;
     for(int i = 0; i < cases.size(); i++){
         vector<T> reiter_copies = create_reiteration_copies<T>(cases[i], reiterations);
         auto start = chrono::steady_clock::now();
@@ -45,6 +44,24 @@ template <typename T> void run_add_front_tests(vector<T> cases, int reiterations
         auto end = chrono::steady_clock::now();
         run_time = chrono::duration<double>(end - start).count();
         avg_time = run_time/reiterations;
-        cout << "Proba " << i << ", ilosc powtorzen: " << reiterations << ". Laczny czas: " << run_time << "s, sredni czas: " << avg_time << "s" << endl;
+        times.push_back(avg_time)
     }
+    return times;
+}
+
+template <typename T> vector<double> run_add_back_tests(vector<T> cases, int reiterations){
+    vector<double> times;
+    double avg_time, run_time;
+    for(int i = 0; i < cases.size(); i++){
+        vector<T> reiter_copies = create_reiteration_copies<T>(cases[i], reiterations);
+        auto start = chrono::steady_clock::now();
+        for(int j = 0; j<reiterations; j++){
+            reiter_copies[j].add_back(34636);
+        }
+        auto end = chrono::steady_clock::now();
+        run_time = chrono::duration<double>(end - start).count();
+        avg_time = run_time/reiterations;
+        times.push_back(avg_time)
+    }
+    return times;
 }
