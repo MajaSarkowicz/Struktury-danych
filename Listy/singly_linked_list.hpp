@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <iostream>
 
 template <typename T>
 class SLinkedList;
@@ -21,6 +22,7 @@ private:
     SNode<T> *tail;
 public:
     SLinkedList() : head(nullptr), tail(nullptr) {};
+    SLinkedList(const SLinkedList& other);
     ~SLinkedList() { while(!empty()) remove_front(); };
     
     bool empty() const
@@ -36,8 +38,20 @@ public:
     void remove_back();
     void insert(const T &e, size_t pos);
     void remove(size_t pos);
-    bool search(const T &e);
+    int search(const T &e, bool compatibility_flag);
+    void print();
 };
+
+template <typename T>
+SLinkedList<T>::SLinkedList(const SLinkedList& other)
+    : head(nullptr), tail(nullptr)
+{
+    SNode<T>* current = other.head;
+    while (current != nullptr) {
+        add_back(current->elem);
+        current = current->next;
+    }
+}
 
 template <typename T>
 void SLinkedList<T>::add_front(const T &e)
@@ -104,15 +118,17 @@ void SLinkedList<T>::remove_back()
 }
 
 template <typename T>
-bool SLinkedList<T>::search(const T &e)
+int SLinkedList<T>::search(const T &e, bool compatibility_flag)
 {
+    int index = 0;
     SNode<T> *indirect = head;
     while (indirect != nullptr)
     {
-        if (indirect->elem == e){ return true; }
+        if (indirect->elem == e){ return index; }
         indirect = indirect->next;
+        index++;
     }
-    return false;
+    return -1;
 }
 
 template <typename T>
@@ -162,4 +178,19 @@ void SLinkedList<T>::remove(size_t pos)
     SNode<T> *trash = current->next;
     current->next = trash->next;
     delete trash;
+}
+
+template <typename T>
+void SLinkedList<T>::print()
+{
+    std::cout << "[";
+    SNode<T>* current = this->head;
+    while(current != nullptr){
+        std::cout << current->elem;
+        current = current->next;
+        if(current != nullptr){
+            std::cout << ", ";
+        }
+    }
+    std::cout << "]\n";
 }

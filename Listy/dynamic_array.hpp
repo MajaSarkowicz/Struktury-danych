@@ -1,5 +1,7 @@
 #pragma once
 #include <algorithm>
+#include <iostream>
+
 
 template <typename T>
 class DynamicArray
@@ -7,6 +9,7 @@ class DynamicArray
 public:
     DynamicArray();
     DynamicArray(size_t cap);
+    DynamicArray(const DynamicArray& other);
     ~DynamicArray();
 
     T *getCollection() { return collection; }
@@ -16,15 +19,17 @@ public:
     void upsize_();
     bool needsToUpsize() { return this->size + 1 >= this->capacity; }
 
-    void insert(size_t position, T val);
-    void push_back(T val);
-    void push_forward(T val);
+    void insert(T val, size_t position);
+    void add_back(T val);
+    void add_front(T val);
 
     void remove(size_t position);
-    void pop_back();
-    void pop_front();
+    void remove_back();
+    void remove_front();
 
-    bool search(T e);
+    int search(T e, bool compatibility_flag);
+
+    void print();
 
 private:
     T *collection;   // tablica
@@ -45,6 +50,15 @@ DynamicArray<T>::DynamicArray(size_t cap) : capacity(cap), size(0)
 }
 
 template <typename T>
+DynamicArray<T>::DynamicArray(const DynamicArray& other) : capacity(other.capacity), size(other.size)
+{
+    collection = new T[capacity];
+    for (size_t i = 0; i < size; i++) {
+        collection[i] = other.collection[i];
+    }
+}
+
+template <typename T>
 DynamicArray<T>::~DynamicArray()
 {
     delete[] collection;
@@ -62,7 +76,7 @@ void DynamicArray<T>::upsize_()
 }
 
 template <typename T>
-void DynamicArray<T>::insert(size_t position, T val)
+void DynamicArray<T>::insert(T val, size_t position)
 {
     if (needsToUpsize())
     {
@@ -74,7 +88,7 @@ void DynamicArray<T>::insert(size_t position, T val)
 }
 
 template <typename T>
-void DynamicArray<T>::push_forward(T val)
+void DynamicArray<T>::add_front(T val)
 {
     if (needsToUpsize())
     {
@@ -86,7 +100,7 @@ void DynamicArray<T>::push_forward(T val)
 }
 
 template <typename T>
-void DynamicArray<T>::push_back(T val)
+void DynamicArray<T>::add_back(T val)
 {
     if (needsToUpsize())
     {
@@ -104,25 +118,38 @@ void DynamicArray<T>::remove(size_t position)
 }
 
 template <typename T>
-void DynamicArray<T>::pop_back()
+void DynamicArray<T>::remove_back()
 {
     size--;
 }
 
 template <typename T>
-void DynamicArray<T>::pop_front()
+void DynamicArray<T>::remove_front()
 {
     std::move(collection + 1, collection + size, collection);
     size--;
 }
 
 template <typename T>
-bool DynamicArray<T>::search(T e)
+int DynamicArray<T>::search(T e, bool compatibility_flag)
 {
     for (size_t i = 0; i < size; i++)
     {
         if (collection[i] == e)
-            return true;
+            return i;
     }
-    return false;
+    return -1;
+}
+
+template <typename T>
+void DynamicArray<T>::print(){
+    std::cout << "[";
+    for (size_t i = 0; i < size; i++)
+    {
+        cout << collection[i];
+        if(i != size-1){
+            std::cout << ", ";
+        }
+    }
+    std::cout << "]\n";
 }
