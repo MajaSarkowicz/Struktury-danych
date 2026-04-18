@@ -14,16 +14,6 @@ true - tryb recznych operacji na strukturach
 false - tryb pomiarowy
 */
 
-template <typename T> void init_test_menu(){
-    vector<T> structures = generate_test_structures<T>(0);
-    int choice = -1;
-    run_add_front_tests(structures, 1000);
-    // while(choice != 0){
-    //     cout << "Wybierz akcje" << endl
-    //     << 
-    // }
-}
-
 template <typename T> void init_manual_menu(){
     T structure;
     int choice = -1;
@@ -107,13 +97,13 @@ int main(){
             switch (choice)
             {
             case 1:
-                init_test_menu<DynamicArray<int>>();
+                run_test_suite<DynamicArray<int>>(4, 100, 100, 100);
                 break;
             case 2:
-                init_test_menu<SLinkedList<int>>();
+                run_test_suite<SLinkedList<int>>(4, 100, 100, 100);
                 break;
             case 3:
-                init_test_menu<DLinkedList<int>>();
+                run_test_suite<DLinkedList<int>>(4, 100, 100, 100);
             }
         }
     }

@@ -15,9 +15,11 @@ public:
     T *getCollection() { return collection; }
     size_t &getSize() { return size; }
     size_t &getCapacity() { return capacity; }
-
+    
     void upsize_();
     bool needsToUpsize() { return this->size + 1 >= this->capacity; }
+
+    const T get(int index) const;
 
     void insert(T val, size_t position);
     void add_back(T val);
@@ -73,6 +75,12 @@ void DynamicArray<T>::upsize_()
     delete[] collection;
     collection = new_collection;
     capacity = new_capacity;
+}
+
+template <typename T>
+const T DynamicArray<T>::get(int index) const
+{
+    return collection[index];
 }
 
 template <typename T>

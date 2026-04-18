@@ -33,6 +33,7 @@ public:
     const T &front() const { return head->elem; } // zwraca element poczatkowy
     const T &back() const { return tail->elem; }  // zwraca element koncowy
     
+    const T get(int index) const;
     void add_front(const T &e);
     void add_back(const T &e);
     void remove_front();
@@ -54,6 +55,37 @@ DLinkedList<T>::DLinkedList(const DLinkedList& other) : head(nullptr), tail(null
         add_back(current->elem);
         current = current->next;
     }
+}
+
+template <typename T>
+const T DLinkedList<T>::get(int index) const
+{
+    DNode<T>* current;
+
+    if (index < 0 || index >= length)
+    throw std::out_of_range("index out of range");
+
+    if(index == 0){
+        return head->elem;
+    }
+
+    if(index == length-1){
+        return tail->elem;
+    }
+
+    if(index <= length / 2)
+    {
+        current = head;
+        for (int i = 0; i < index; i++)
+            current = current->next;
+    }
+    else
+    {
+        current = tail;
+        for (int i = length - 1; i > index; i--)
+            current = current->previous;
+    }
+    return current->elem;
 }
 
 template <typename T>
@@ -84,6 +116,7 @@ void DLinkedList<T>::add_back(const T &e)
         w->next = nullptr;
         w->previous = nullptr;
         tail = head = w;
+        length++;
         return;
     }
     DNode<T> *v = new DNode<T>;
@@ -102,8 +135,12 @@ void DLinkedList<T>::remove_front()
         return;
     DNode<T> *old = head;
     head = old->next;
-    if (head == nullptr)
+    if (head == nullptr){
         tail = nullptr;
+    }
+    else{
+        head->previous = nullptr;
+    }
     delete old;
     length--;
 }
@@ -115,8 +152,12 @@ void DLinkedList<T>::remove_back()
         return;
     DNode<T> *old = tail;
     tail = old->previous;
-    if (tail == nullptr)
+    if (tail == nullptr){
         head = nullptr;
+    }
+    else{
+        tail->next = nullptr;
+    }
     delete old;
     length--;
 }
@@ -138,7 +179,7 @@ int DLinkedList<T>::fw_search(const T &e)
 template <typename T>
 int DLinkedList<T>::bw_search(const T &e)
 {
-    int index = length;
+    int index = length-1;
     DNode<T> *indirect = tail;
     while (indirect != nullptr)
     {
@@ -163,6 +204,10 @@ int DLinkedList<T>::search(const T &e, bool backwards)
 template <typename T>
 void DLinkedList<T>::insert(const T &e, size_t pos)
 {
+    if (pos > length || pos <  0) {
+        throw std::out_of_range("insert out of range");
+    }
+
     if (pos == 0)
     {
         add_front(e);
@@ -209,25 +254,28 @@ void DLinkedList<T>::insert(const T &e, size_t pos)
 template <typename T>
 void DLinkedList<T>::remove(size_t pos)
 {
+    if (pos >= length) {
+        throw std::out_of_range("remove out of range");
+    }
     if (pos == 0)
     {
         this->remove_front();
         return;
     }
-    if (pos == length){
+    if (pos == length-1){
         this->remove_back();
         return;
     }
     DNode<T> *current = head;
     if(pos <= length/2){
-        DNode<T> *current = this->head;
+        current = this->head;
         for (int i = 1; i < pos; i++)
         {
             current = current->next;
         }
     }
     else{
-        DNode<T> *current = this->tail;
+        current = this->tail;
         for (int i = length-1; i > pos; i--)
         {
             current = current->previous;
@@ -235,7 +283,10 @@ void DLinkedList<T>::remove(size_t pos)
     }
     DNode<T> *trash = current->next;
     current->next = trash->next;
+    if (trash->next != nullptr)
+        trash->next->previous = current;
     delete trash;
+    length--;
 }
 
 template <typename T>

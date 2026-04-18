@@ -31,7 +31,9 @@ public:
     };
     const T &front() const { return head->elem; } // zwraca element poczatkowy
     const T &back() const { return tail->elem; }  // zwraca element koncowy
-    
+    const T get(int index) const;
+
+
     void add_front(const T &e);
     void add_back(const T &e);
     void remove_front();
@@ -42,6 +44,7 @@ public:
     void print();
 };
 
+
 template <typename T>
 SLinkedList<T>::SLinkedList(const SLinkedList& other)
     : head(nullptr), tail(nullptr)
@@ -51,6 +54,19 @@ SLinkedList<T>::SLinkedList(const SLinkedList& other)
         add_back(current->elem);
         current = current->next;
     }
+}
+
+template <typename T>
+const T SLinkedList<T>::get(int index) const
+{
+    SNode<T> *current = head;
+    for(int i = 0; i < index && current != nullptr; i++){
+        current = current->next;
+    }
+    if (current == nullptr) {
+        throw std::out_of_range("index out of range");
+    }
+    return current->elem;
 }
 
 template <typename T>
@@ -140,18 +156,19 @@ void SLinkedList<T>::insert(const T &e, size_t pos)
         return;
     }
     SNode<T> *current = this->head;
-    for (int i = 1; i < pos; i++)
-    {
+    for (int i = 1; i < pos && current != nullptr; i++) {
         current = current->next;
     }
-    if (current->next == nullptr)
-    {
-        this->add_back(e);
+
+    if (current == nullptr) {
+        add_back(e);
         return;
     }
     SNode<T> *newNode = new SNode<T>;
     SNode<T> *oldNode = current->next;
-
+    if (oldNode == nullptr) {
+        tail = newNode;
+    }
     current->next = newNode;
     newNode->elem = e;
     newNode->next = oldNode;
@@ -160,19 +177,19 @@ void SLinkedList<T>::insert(const T &e, size_t pos)
 template <typename T>
 void SLinkedList<T>::remove(size_t pos)
 {
-    if (pos == 0)
-    {
-        this->remove_front();
+    if (pos == 0) {
+        remove_front();
         return;
     }
-    SNode<T> *current = head;
-    for (int i = 1; i < pos; i++)
-    {
+
+    SNode<T>* current = head;
+
+    for (size_t i = 1; i < pos && current != nullptr; i++) {
         current = current->next;
     }
-    if (current->next == nullptr)
-    {
-        this->remove_back();
+
+    if (current == nullptr || current->next == nullptr) {
+        remove_back();
         return;
     }
     SNode<T> *trash = current->next;
