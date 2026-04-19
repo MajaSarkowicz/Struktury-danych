@@ -1,5 +1,7 @@
 #pragma once
 #include <algorithm>
+#include <iostream>
+
 
 template <typename T>
 class DynamicArray
@@ -7,24 +9,29 @@ class DynamicArray
 public:
     DynamicArray();
     DynamicArray(size_t cap);
+    DynamicArray(const DynamicArray& other);
     ~DynamicArray();
 
     T *getCollection() { return collection; }
     size_t &getSize() { return size; }
     size_t &getCapacity() { return capacity; }
-
+    
     void upsize_();
     bool needsToUpsize() { return this->size + 1 >= this->capacity; }
 
-    void insert(size_t position, T val);
-    void push_back(T val);
-    void push_forward(T val);
+    const T get(int index) const;
+
+    void insert(T val, size_t position);
+    void add_back(T val);
+    void add_front(T val);
 
     void remove(size_t position);
-    void pop_back();
-    void pop_front();
+    void remove_back();
+    void remove_front();
 
-    bool search(T e);
+    int search(T e, bool compatibility_flag);
+
+    void print();
 
 private:
     T *collection;   // tablica
@@ -45,6 +52,15 @@ DynamicArray<T>::DynamicArray(size_t cap) : capacity(cap), size(0)
 }
 
 template <typename T>
+DynamicArray<T>::DynamicArray(const DynamicArray& other) : capacity(other.capacity), size(other.size)
+{
+    collection = new T[capacity];
+    for (size_t i = 0; i < size; i++) {
+        collection[i] = other.collection[i];
+    }
+}
+
+template <typename T>
 DynamicArray<T>::~DynamicArray()
 {
     delete[] collection;
@@ -53,6 +69,7 @@ DynamicArray<T>::~DynamicArray()
 template <typename T>
 void DynamicArray<T>::upsize_()
 {
+    // Powiększanie pojemnosci tablicy o jego dwa razy
     size_t new_capacity = capacity * 2;
     T *new_collection = new T[new_capacity];
     std::move(collection, collection + size, new_collection);
@@ -62,8 +79,16 @@ void DynamicArray<T>::upsize_()
 }
 
 template <typename T>
-void DynamicArray<T>::insert(size_t position, T val)
+const T DynamicArray<T>::get(int index) const
 {
+    // Zwracanie elementu na podanym indeksie
+    return collection[index];
+}
+
+template <typename T>
+void DynamicArray<T>::insert(T val, size_t position)
+{
+    // Wstawianie elementu na pozycje oraz przesuniecie pozostalych
     if (needsToUpsize())
     {
         upsize_();
@@ -74,8 +99,9 @@ void DynamicArray<T>::insert(size_t position, T val)
 }
 
 template <typename T>
-void DynamicArray<T>::push_forward(T val)
+void DynamicArray<T>::add_front(T val)
 {
+    // Dodawanie elementu na poczatek tablicy
     if (needsToUpsize())
     {
         upsize_();
@@ -86,8 +112,9 @@ void DynamicArray<T>::push_forward(T val)
 }
 
 template <typename T>
-void DynamicArray<T>::push_back(T val)
+void DynamicArray<T>::add_back(T val)
 {
+    // Dodawanie elementu na koniec tablicy
     if (needsToUpsize())
     {
         upsize_();
@@ -99,30 +126,48 @@ void DynamicArray<T>::push_back(T val)
 template <typename T>
 void DynamicArray<T>::remove(size_t position)
 {
+    // Usuwanie elementu i przesuniecie pozostalych w lewo
     std::move(collection + position + 1, collection + size, collection + position);
     size--;
 }
 
 template <typename T>
-void DynamicArray<T>::pop_back()
+void DynamicArray<T>::remove_back()
 {
+    // Usuwanie ostatniego elementu
     size--;
 }
 
 template <typename T>
-void DynamicArray<T>::pop_front()
+void DynamicArray<T>::remove_front()
 {
+    // Usuwanie pierwszego elementu i przesuniecie pozostalych w lewo
     std::move(collection + 1, collection + size, collection);
     size--;
 }
 
 template <typename T>
-bool DynamicArray<T>::search(T e)
+int DynamicArray<T>::search(T e, bool compatibility_flag)
+//comatibility_flag jest nieuzywany, ale pozostawiony dla kompatybilnosci z DLinkedList
 {
+    // Przeszukiwanie tablicy w poszukiwaniu elementu
     for (size_t i = 0; i < size; i++)
     {
         if (collection[i] == e)
-            return true;
+            return i;
     }
-    return false;
+    return -1;
+}
+
+template <typename T>
+void DynamicArray<T>::print(){
+    std::cout << "[";
+    for (size_t i = 0; i < size; i++)
+    {
+        cout << collection[i];
+        if(i != size-1){
+            std::cout << ", ";
+        }
+    }
+    std::cout << "]\n";
 }
