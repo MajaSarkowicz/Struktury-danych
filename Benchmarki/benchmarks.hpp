@@ -10,6 +10,7 @@
 using namespace std;
 
 template <typename T> vector<T> create_reiteration_copies(T structure, int reiterations){
+    // Tworzenie wielu kopii struktury do wielokrotnych pomiarow
     vector<T> reiter_copies;
     for(int i = 0; i < reiterations; i++){
         reiter_copies.push_back(structure);
@@ -18,6 +19,7 @@ template <typename T> vector<T> create_reiteration_copies(T structure, int reite
 }
 
 template <typename T, typename Func> double run_test(const T& structure, Func f, int reiterations, int struct_size_id, int get_index){
+    // Pomiar czasu wykonania operacji wielokrotnie i zwrocenie sredniej
     auto reiter_copies = create_reiteration_copies<T>(structure, reiterations);
     auto start = chrono::steady_clock::now();
     int test_value = SEARCH_ADD_INDEXES[struct_size_id][get_index];
@@ -29,6 +31,7 @@ template <typename T, typename Func> double run_test(const T& structure, Func f,
 }
 
 template <typename T, typename Func> vector<double> run_seed(const vector<T>& seed_structures, Func f, int reiterations, int get_index=0){
+    // Wykonanie testu dla wszystkich rozmiarow struktur i zwrocenie wynikow
     vector<double> results;
     for(int i = 0; i < seed_structures.size(); i++){
         results.push_back(run_test<T>(seed_structures[i], f, reiterations, i, get_index));
@@ -37,6 +40,7 @@ template <typename T, typename Func> vector<double> run_seed(const vector<T>& se
 }
 
 template <typename T> T populate_structure(int seed, int size){
+    // Tworzenie struktury z losowymi danymi
     mt19937 rng(seed);
     uniform_int_distribution<int> dist(INT_MIN, INT_MAX);
     T structure;
@@ -47,6 +51,7 @@ template <typename T> T populate_structure(int seed, int size){
 }
 
 template <typename T> vector<T> generate_test_structures(int batch){
+    // Generowanie zestawu struktur o roznych rozmiarach do testowania
     vector<T> structures;
     for(int i = 0; i<size(MEASUREMENT_POINTS); i++){
         structures.push_back(populate_structure<T>(batch + i, MEASUREMENT_POINTS[i]));
@@ -55,6 +60,7 @@ template <typename T> vector<T> generate_test_structures(int batch){
 }
 
 template <typename T> void vector_to_file(vector<T> batch, fstream& file, bool newline=true){
+    // Zapisywanie wynikow pomiarow do pliku CSV
     for(int i = 0; i < batch.size(); i++){
         file << batch.at(i);
         if(i != batch.size()-1){
@@ -67,6 +73,7 @@ template <typename T> void vector_to_file(vector<T> batch, fstream& file, bool n
 }
 
 template <typename T> void run_test_suite(int seeds, int add_reiterations, int insert_reiterations, int search_reiterations){
+    // Uruchomienie pelnego zestawu testu z wiele iteracjami i zapisanie wynikow
     vector<T> structures;
     vector<vector<double>> seed_times;
     for(int i = 0; i<seeds; i++){

@@ -59,6 +59,7 @@ SLinkedList<T>::SLinkedList(const SLinkedList& other)
 template <typename T>
 const T SLinkedList<T>::get(int index) const
 {
+    // Przetrawianie listy do odczytania elementu na podanym indeksie
     SNode<T> *current = head;
     for(int i = 0; i < index && current != nullptr; i++){
         current = current->next;
@@ -72,6 +73,7 @@ const T SLinkedList<T>::get(int index) const
 template <typename T>
 void SLinkedList<T>::add_front(const T &e)
 {
+    // Dodawanie elementu na poczatek listy
     SNode<T> *v = new SNode<T>;
     v->elem = e;
     v->next = head;
@@ -85,6 +87,7 @@ void SLinkedList<T>::add_front(const T &e)
 template <typename T>
 void SLinkedList<T>::add_back(const T &e)
 {
+    // Dodawanie elementu na koniec listy
     if (head == nullptr)
     {
         SNode<T> *w = new SNode<T>;
@@ -102,6 +105,7 @@ void SLinkedList<T>::add_back(const T &e)
 template <typename T>
 void SLinkedList<T>::remove_front()
 {
+    // Usuwanie pierwszego elementu z listy
     if (empty())
         return;
     SNode<T> *old = head;
@@ -114,6 +118,7 @@ void SLinkedList<T>::remove_front()
 template <typename T>
 void SLinkedList<T>::remove_back()
 {
+    // Usuwanie ostatniego elementu z listy
     if (head == tail)
     {
         delete head;
@@ -123,6 +128,7 @@ void SLinkedList<T>::remove_back()
     if (head == nullptr)
         return;
 
+    // Szukanie przedostatniego elementu
     SNode<T> *indirect = head;
     while (indirect->next != tail)
     {
@@ -135,7 +141,9 @@ void SLinkedList<T>::remove_back()
 
 template <typename T>
 int SLinkedList<T>::search(const T &e, bool compatibility_flag)
+//comatibility_flag jest nieuzywany, ale pozostawiony dla kompatybilnosci z DLinkedList
 {
+    // Przeszukiwanie listy w poszukiwaniu elementu
     int index = 0;
     SNode<T> *indirect = head;
     while (indirect != nullptr)
@@ -150,6 +158,7 @@ int SLinkedList<T>::search(const T &e, bool compatibility_flag)
 template <typename T>
 void SLinkedList<T>::insert(const T &e, size_t pos)
 {
+    // Wstawianie elementu na okreslona pozycje
     if (pos == 0)
     {
         this->add_front(e);
@@ -177,6 +186,7 @@ void SLinkedList<T>::insert(const T &e, size_t pos)
 template <typename T>
 void SLinkedList<T>::remove(size_t pos)
 {
+    // Usuwanie elementu z okreslona pozycji
     if (pos == 0) {
         remove_front();
         return;

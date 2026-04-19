@@ -8,13 +8,12 @@
 using namespace std;
 
 bool MANUAL_MODE = false;
-/*
-Ustawia tryb programu
-true - tryb recznych operacji na strukturach
-false - tryb pomiarowy
-*/
+// Flaga okreslajaca tryb dzialania programu
+// true - interaktywne operacje na strukturach danych
+// false - automatyczne pomiary wydajnosci
 
 template <typename T> void init_manual_menu(){
+    // Interaktywne menu do wykonywania odseparowanych operacji na strukturze
     T structure;
     int choice = -1;
     while(choice != 0){
@@ -71,6 +70,7 @@ template <typename T> void init_manual_menu(){
 }
 
 int main(){
+    // Glowne menu wyboru struktury danych do testowania
     int choice = -1;
     while(choice != 0){
         cout << "Wybierz strukture:" << endl 

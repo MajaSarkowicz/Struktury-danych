@@ -73,6 +73,7 @@ const T DLinkedList<T>::get(int index) const
         return tail->elem;
     }
 
+    // Wybierz kierunek przechodzenia w zaleznosci od pozycji indeksu
     if(index <= length / 2)
     {
         current = head;
@@ -91,6 +92,7 @@ const T DLinkedList<T>::get(int index) const
 template <typename T>
 void DLinkedList<T>::add_front(const T &e)
 {
+    // Tworzenie nowego węzła i wstawienie na początek listy
     DNode<T>* v = new DNode<T>;
     v->elem = e;
     v->previous = nullptr;
@@ -109,6 +111,7 @@ void DLinkedList<T>::add_front(const T &e)
 template <typename T>
 void DLinkedList<T>::add_back(const T &e)
 {
+    // Dodawanie elementu na koncu listy
     if (empty())
     {
         DNode<T> *w = new DNode<T>;
@@ -131,6 +134,7 @@ void DLinkedList<T>::add_back(const T &e)
 template <typename T>
 void DLinkedList<T>::remove_front()
 {
+    // Usuwanie pierwszego elementu z listy
     if (empty())
         return;
     DNode<T> *old = head;
@@ -148,6 +152,7 @@ void DLinkedList<T>::remove_front()
 template <typename T>
 void DLinkedList<T>::remove_back()
 {
+    // Usuwanie ostatniego elementu z listy
     if (empty())
         return;
     DNode<T> *old = tail;
@@ -165,6 +170,7 @@ void DLinkedList<T>::remove_back()
 template <typename T>
 int DLinkedList<T>::fw_search(const T &e)
 {
+    // Przeszukiwanie od poczatku listy do konca
     int index = 0;
     DNode<T> *indirect = head;
     while (indirect != nullptr)
@@ -179,6 +185,7 @@ int DLinkedList<T>::fw_search(const T &e)
 template <typename T>
 int DLinkedList<T>::bw_search(const T &e)
 {
+    // Przeszukiwanie od konca listy do poczatku
     int index = length-1;
     DNode<T> *indirect = tail;
     while (indirect != nullptr)
@@ -204,6 +211,7 @@ int DLinkedList<T>::search(const T &e, bool backwards)
 template <typename T>
 void DLinkedList<T>::insert(const T &e, size_t pos)
 {
+    // Wstawianie elementu na okreslona pozycje
     if (pos > length || pos <  0) {
         throw std::out_of_range("insert out of range");
     }
@@ -222,6 +230,7 @@ void DLinkedList<T>::insert(const T &e, size_t pos)
 
     DNode<T>* current;
 
+    // Wybierz kierunek przechodzenia na podstawie pozycji
     if (pos <= length / 2)
     {
         current = head;
@@ -254,6 +263,7 @@ void DLinkedList<T>::insert(const T &e, size_t pos)
 template <typename T>
 void DLinkedList<T>::remove(size_t pos)
 {
+    // Usuwanie elementu z okreslona pozycji
     if (pos >= length) {
         throw std::out_of_range("remove out of range");
     }
@@ -267,6 +277,7 @@ void DLinkedList<T>::remove(size_t pos)
         return;
     }
     DNode<T> *current = head;
+    // Wybierz kierunek przechodzenia na podstawie pozycji
     if(pos <= length/2){
         current = this->head;
         for (int i = 1; i < pos; i++)
