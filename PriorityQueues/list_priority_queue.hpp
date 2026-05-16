@@ -1,3 +1,4 @@
+#pragma once
 #include "../Listy/doubly_linked_list.hpp"
 #include <functional>
 #include <stdexcept>
